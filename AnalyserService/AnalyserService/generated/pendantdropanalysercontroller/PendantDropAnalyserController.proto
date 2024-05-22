@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+import "SiLAFramework.proto";
+
+package sila2.org.silastandard.examples.pendantdropanalysercontroller.v1;
+
+/* Experiment-specific service that retrieves an image from the data service, then analyses that image to determine the surface tension of the pendant drop in the image. And stores the results of the analysis in data service. In this mocked service, only the volume of SDS is retrieved from the data service and this value is compared to a function that caluclates the surface tension. */
+service PendantDropAnalyserController {
+  /* Retrieve an image from the data service and determine its interfacial tension. */
+  rpc AnalyseImage (sila2.org.silastandard.examples.pendantdropanalysercontroller.v1.AnalyseImage_Parameters) returns (sila2.org.silastandard.examples.pendantdropanalysercontroller.v1.AnalyseImage_Responses) {}
+  /* Store analysis results of image. */
+  rpc StoreAnalysisResulsts (sila2.org.silastandard.examples.pendantdropanalysercontroller.v1.StoreAnalysisResulsts_Parameters) returns (sila2.org.silastandard.examples.pendantdropanalysercontroller.v1.StoreAnalysisResulsts_Responses) {}
+}
+
+/* Parameters for AnalyseImage */
+message AnalyseImage_Parameters {
+  sila2.org.silastandard.String ImagePath = 1;  /* File path from where to fetch the image to be analysed. */
+}
+
+/* Responses of AnalyseImage */
+message AnalyseImage_Responses {
+}
+
+/* Parameters for StoreAnalysisResulsts */
+message StoreAnalysisResulsts_Parameters {
+  sila2.org.silastandard.String ItemPath = 1;  /* Storage location of the data item in the form of of a file path like so: namespaceName/collectionName/dataItemName. */
+}
+
+/* Responses of StoreAnalysisResulsts */
+message StoreAnalysisResulsts_Responses {
+}

@@ -1,0 +1,71 @@
+<Feature xmlns="http://www.sila-standard.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Category="examples" FeatureVersion="1.0" MaturityLevel="Verified" Originator="org.silastandard" SiLA2Version="1.0" xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>BinarySearchController</Identifier>
+  <DisplayName>Binary search Controller</DisplayName>
+  <Description>Provides commands for implementing the binary search algorithm in laboratory automation applications. 
+    It facilitates the initialization of experiment parameters, updating the search range based on measurements, 
+    determining the next experiment step, and storing experiment data.</Description>
+  <Command>
+    <Identifier>InitializeExperimentParameters</Identifier>
+    <DisplayName>Initialize experiment parameters</DisplayName>
+    <Description>Initialize the experiment parameters for the binary search algorithm.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>High</Identifier>
+      <DisplayName>High</DisplayName>
+      <Description>Upper bound of the search range, defining the end of the search space.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Low</Identifier>
+      <DisplayName>Low</DisplayName>
+      <Description>Lower bound of the search range, defining the start of the search space.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Target</Identifier>
+      <DisplayName>Target</DisplayName>
+      <Description>Desired value that the algorithm aims to achieve.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>UpdateSearchRange</Identifier>
+    <DisplayName>Update search range</DisplayName>
+    <Description>Updates the search range for the binary search algorithm based on the surface tension measurement.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>MeasurementPath</Identifier>
+      <DisplayName>Measurement path</DisplayName>
+      <Description>Path to the measurement of the previous experiment.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>CalculateMidPoint</Identifier>
+    <DisplayName>Calculate mid point</DisplayName>
+    <Description>calculates the midpoint of the current search range and checks if the result is within the desired tolerance of the target value.</Description>
+    <Observable>No</Observable>
+  </Command>
+  <Command>
+    <Identifier>StoreMidPoint</Identifier>
+    <DisplayName>Store mid point</DisplayName>
+    <Description>Stores the mid point determined by the binary search alrightm.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ItemPath</Identifier>
+      <DisplayName>Item path</DisplayName>
+      <Description>Storage location of the data item in the form of of a file path.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+</Feature>

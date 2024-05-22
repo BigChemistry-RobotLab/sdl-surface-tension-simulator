@@ -1,0 +1,55 @@
+<Feature xmlns="http://www.sila-standard.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Category="examples" FeatureVersion="1.0" MaturityLevel="Verified" Originator="org.silastandard" SiLA2Version="1.0" xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>ExperimentPlanProvider</Identifier>
+  <DisplayName>Experiment Plan Provider</DisplayName>
+  <Description>TODO (stores plan with target and checks if goal is reached)</Description>
+  <Command>
+    <Identifier>SubmitExperimentDesignPlan</Identifier>
+    <DisplayName>Submit experiment design plan</DisplayName>
+    <Description>Submit experiment design plan.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>Target</Identifier>
+      <DisplayName>Target</DisplayName>
+      <Description>Desired value that the algorithm aims to achieve.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Tolerance</Identifier>
+      <DisplayName>Tolerance</DisplayName>
+      <Description>Acceptable deviation allowed between the measurement and the target value.</Description>
+      <DataType>
+        <Basic>Real</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>CreateExperimentPlan</Identifier>
+    <DisplayName>CreateExperimentPlan</DisplayName>
+    <Description>Creates new experiment plan for experiment in which a target is to be reached by checking if the goal has been reached.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>PreviousMeasurementItemPath</Identifier>
+      <DisplayName>Previous measurement item path</DisplayName>
+      <Description>Path to the data item that holds the measurement of the previous experiment.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>StoreExperimentPlan</Identifier>
+    <DisplayName>Store experiment plan</DisplayName>
+    <Description>Store experiment plan</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ItemPath</Identifier>
+      <DisplayName>Item path</DisplayName>
+      <Description>Storage location of the data item in the form of of a file path.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+</Feature>

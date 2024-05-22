@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+import "SiLAFramework.proto";
+
+package sila2.org.silastandard.examples.experimentplanprovider.v1;
+
+/* TODO (stores plan with target and checks if goal is reached) */
+service ExperimentPlanProvider {
+  /* Submit experiment design plan. */
+  rpc SubmitExperimentDesignPlan (sila2.org.silastandard.examples.experimentplanprovider.v1.SubmitExperimentDesignPlan_Parameters) returns (sila2.org.silastandard.examples.experimentplanprovider.v1.SubmitExperimentDesignPlan_Responses) {}
+  /* Creates new experiment plan for experiment in which a target is to be reached by checking if the goal has been reached. */
+  rpc CreateExperimentPlan (sila2.org.silastandard.examples.experimentplanprovider.v1.CreateExperimentPlan_Parameters) returns (sila2.org.silastandard.examples.experimentplanprovider.v1.CreateExperimentPlan_Responses) {}
+  /* Store experiment plan */
+  rpc StoreExperimentPlan (sila2.org.silastandard.examples.experimentplanprovider.v1.StoreExperimentPlan_Parameters) returns (sila2.org.silastandard.examples.experimentplanprovider.v1.StoreExperimentPlan_Responses) {}
+}
+
+/* Parameters for SubmitExperimentDesignPlan */
+message SubmitExperimentDesignPlan_Parameters {
+  sila2.org.silastandard.Real Target = 1;  /* Desired value that the algorithm aims to achieve. */
+  sila2.org.silastandard.Real Tolerance = 2;  /* Acceptable deviation allowed between the measurement and the target value. */
+}
+
+/* Responses of SubmitExperimentDesignPlan */
+message SubmitExperimentDesignPlan_Responses {
+}
+
+/* Parameters for CreateExperimentPlan */
+message CreateExperimentPlan_Parameters {
+  sila2.org.silastandard.String PreviousMeasurementItemPath = 1;  /* Path to the data item that holds the measurement of the previous experiment. */
+}
+
+/* Responses of CreateExperimentPlan */
+message CreateExperimentPlan_Responses {
+}
+
+/* Parameters for StoreExperimentPlan */
+message StoreExperimentPlan_Parameters {
+  sila2.org.silastandard.String ItemPath = 1;  /* Storage location of the data item in the form of of a file path. */
+}
+
+/* Responses of StoreExperimentPlan */
+message StoreExperimentPlan_Responses {
+}

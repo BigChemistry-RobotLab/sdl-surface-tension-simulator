@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+import "SiLAFramework.proto";
+
+package sila2.org.silastandard.examples.binarysearchcontroller.v1;
+
+/* Provides commands for implementing the binary search algorithm in laboratory automation applications. It facilitates the initialization of experiment parameters, updating the search range based on measurements, determining the next experiment step, and storing experiment data. */
+service BinarySearchController {
+  /* Initialize the experiment parameters for the binary search algorithm. */
+  rpc InitializeExperimentParameters (sila2.org.silastandard.examples.binarysearchcontroller.v1.InitializeExperimentParameters_Parameters) returns (sila2.org.silastandard.examples.binarysearchcontroller.v1.InitializeExperimentParameters_Responses) {}
+  /* Updates the search range for the binary search algorithm based on the surface tension measurement. */
+  rpc UpdateSearchRange (sila2.org.silastandard.examples.binarysearchcontroller.v1.UpdateSearchRange_Parameters) returns (sila2.org.silastandard.examples.binarysearchcontroller.v1.UpdateSearchRange_Responses) {}
+  /* calculates the midpoint of the current search range and checks if the result is within the desired tolerance of the target value. */
+  rpc CalculateMidPoint (sila2.org.silastandard.examples.binarysearchcontroller.v1.CalculateMidPoint_Parameters) returns (sila2.org.silastandard.examples.binarysearchcontroller.v1.CalculateMidPoint_Responses) {}
+  /* Stores the mid point determined by the binary search alrightm. */
+  rpc StoreMidPoint (sila2.org.silastandard.examples.binarysearchcontroller.v1.StoreMidPoint_Parameters) returns (sila2.org.silastandard.examples.binarysearchcontroller.v1.StoreMidPoint_Responses) {}
+}
+
+/* Parameters for InitializeExperimentParameters */
+message InitializeExperimentParameters_Parameters {
+  sila2.org.silastandard.Real High = 1;  /* Upper bound of the search range, defining the end of the search space. */
+  sila2.org.silastandard.Real Low = 2;  /* Lower bound of the search range, defining the start of the search space. */
+  sila2.org.silastandard.Real Target = 3;  /* Desired value that the algorithm aims to achieve. */
+}
+
+/* Responses of InitializeExperimentParameters */
+message InitializeExperimentParameters_Responses {
+}
+
+/* Parameters for UpdateSearchRange */
+message UpdateSearchRange_Parameters {
+  sila2.org.silastandard.String MeasurementPath = 1;  /* Path to the measurement of the previous experiment. */
+}
+
+/* Responses of UpdateSearchRange */
+message UpdateSearchRange_Responses {
+}
+
+/* Parameters for CalculateMidPoint */
+message CalculateMidPoint_Parameters {
+}
+
+/* Responses of CalculateMidPoint */
+message CalculateMidPoint_Responses {
+}
+
+/* Parameters for StoreMidPoint */
+message StoreMidPoint_Parameters {
+  sila2.org.silastandard.String ItemPath = 1;  /* Storage location of the data item in the form of of a file path. */
+}
+
+/* Responses of StoreMidPoint */
+message StoreMidPoint_Responses {
+}

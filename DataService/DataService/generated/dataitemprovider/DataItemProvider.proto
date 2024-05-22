@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+import "SiLAFramework.proto";
+
+package sila2.org.silastandard.examples.dataitemprovider.v1;
+
+/* Storing of experimental data, the experimental workflow produces a uniquely-named container called a data namespace. This data namespace holds data items and data containers. Data items represent uniquely-named items of data and data collections are uniquely-named collections of data items. Items and collections are referenced to in the form of file paths like so: namespaceName/collectionName/dataItemName. */
+service DataItemProvider {
+  /* Creates a uniquely named data namespace. */
+  rpc CreateDataNamespace (sila2.org.silastandard.examples.dataitemprovider.v1.CreateDataNamespace_Parameters) returns (sila2.org.silastandard.examples.dataitemprovider.v1.CreateDataNamespace_Responses) {}
+  /* Create a new data item collection inside of data namespace. */
+  rpc CreateDataCollection (sila2.org.silastandard.examples.dataitemprovider.v1.CreateDataCollection_Parameters) returns (sila2.org.silastandard.examples.dataitemprovider.v1.CreateDataCollection_Responses) {}
+  /* Creates a uniquely named data item inside of data collection and namespace. */
+  rpc CreateDataItem (sila2.org.silastandard.examples.dataitemprovider.v1.CreateDataItem_Parameters) returns (sila2.org.silastandard.examples.dataitemprovider.v1.CreateDataItem_Responses) {}
+  /* Gets data item by name from collection and namespace. */
+  rpc GetDataItem (sila2.org.silastandard.examples.dataitemprovider.v1.GetDataItem_Parameters) returns (sila2.org.silastandard.examples.dataitemprovider.v1.GetDataItem_Responses) {}
+}
+
+/* Parameters for CreateDataNamespace */
+message CreateDataNamespace_Parameters {
+  sila2.org.silastandard.String DataNamespaceName = 1;  /* The unique name of the data namespace. */
+}
+
+/* Responses of CreateDataNamespace */
+message CreateDataNamespace_Responses {
+}
+
+/* Parameters for CreateDataCollection */
+message CreateDataCollection_Parameters {
+  sila2.org.silastandard.String CollectionPath = 1;  /* The path to the collection to be created with a unique name. */
+}
+
+/* Responses of CreateDataCollection */
+message CreateDataCollection_Responses {
+}
+
+/* Parameters for CreateDataItem */
+message CreateDataItem_Parameters {
+  message ItemProperties_Struct {
+    sila2.org.silastandard.String Key = 1;  /* Key of key value pair. */
+    sila2.org.silastandard.String Value = 2;  /* Value of key value pair as string. */
+  }
+  sila2.org.silastandard.String ItemPath = 1;  /* The path to the data item to be created with a unique name inside of a collection and namespace. */
+  sila2.org.silastandard.Binary Content = 2;  /* Content of data item. */
+  repeated sila2.org.silastandard.examples.dataitemprovider.v1.CreateDataItem_Parameters.ItemProperties_Struct ItemProperties = 3;  /* Properties of data item as key value pair. */
+}
+
+/* Responses of CreateDataItem */
+message CreateDataItem_Responses {
+}
+
+/* Parameters for GetDataItem */
+message GetDataItem_Parameters {
+  sila2.org.silastandard.String ItemPath = 1;  /* The path to the data item inside of a collection and namespace. */
+}
+
+/* Responses of GetDataItem */
+message GetDataItem_Responses {
+  message ItemProperties_Struct {
+    sila2.org.silastandard.String Key = 1;  /* Key of key value pair. */
+    sila2.org.silastandard.String Value = 2;  /* Value of key value pair as string. */
+  }
+  sila2.org.silastandard.Binary DataItemContent = 1;  /* Content of the data item. */
+  repeated sila2.org.silastandard.examples.dataitemprovider.v1.GetDataItem_Responses.ItemProperties_Struct ItemProperties = 2;  /* Properties of data item. */
+}

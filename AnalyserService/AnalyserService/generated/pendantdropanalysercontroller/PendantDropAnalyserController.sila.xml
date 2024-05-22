@@ -1,0 +1,35 @@
+<Feature xmlns="http://www.sila-standard.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Category="examples" FeatureVersion="1.0" MaturityLevel="Verified" Originator="org.silastandard" SiLA2Version="1.0" xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>PendantDropAnalyserController</Identifier>
+  <DisplayName>Pendant drop analyser controller</DisplayName>
+  <Description>Experiment-specific service that retrieves an image from the data service, then analyses that image to determine the surface tension of the pendant drop in the image. 
+    And stores the results of the analysis in data service. In this mocked service, only the volume of SDS is retrieved from the data service 
+    and this value is compared to a function that caluclates the surface tension.</Description>
+  <Command>
+    <Identifier>AnalyseImage</Identifier>
+    <DisplayName>Analyse image</DisplayName>
+    <Description>Retrieve an image from the data service and determine its interfacial tension.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ImagePath</Identifier>
+      <DisplayName>Image path</DisplayName>
+      <Description>File path from where to fetch the image to be analysed.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+  <Command>
+    <Identifier>StoreAnalysisResulsts</Identifier>
+    <DisplayName>Store analysis results</DisplayName>
+    <Description>Store analysis results of image.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ItemPath</Identifier>
+      <DisplayName>Item path</DisplayName>
+      <Description>Storage location of the data item in the form of of a file path like so: namespaceName/collectionName/dataItemName.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+</Feature>

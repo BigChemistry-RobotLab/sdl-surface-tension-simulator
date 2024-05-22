@@ -1,0 +1,178 @@
+<Feature xmlns="http://www.sila-standard.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Category="examples" FeatureVersion="1.0" MaturityLevel="Verified" Originator="org.silastandard" SiLA2Version="1.0" xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>DataItemProvider</Identifier>
+  <DisplayName>Data item provider</DisplayName>
+  <Description>Storing of experimental data, the experimental workflow produces a uniquely-named container called a data namespace. This data namespace holds data items and data containers. 
+    Data items represent uniquely-named items of data and data collections are uniquely-named collections of data items. 
+    Items and collections are referenced to in the form of file paths like so: namespaceName/collectionName/dataItemName.</Description>
+  <Command>
+    <Identifier>CreateDataNamespace</Identifier>
+    <DisplayName>Create new data namespace</DisplayName>
+    <Description>Creates a uniquely named data namespace.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>DataNamespaceName</Identifier>
+      <DisplayName>Data namespace name</DisplayName>
+      <Description>The unique name of the data namespace.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+    <DefinedExecutionErrors>
+      <Identifier>DataNamespaceAlreadyExists</Identifier>
+    </DefinedExecutionErrors>
+  </Command>
+  <Command>
+    <Identifier>CreateDataCollection</Identifier>
+    <DisplayName>Create data item collection</DisplayName>
+    <Description>Create a new data item collection inside of data namespace.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>CollectionPath</Identifier>
+      <DisplayName>Collection path</DisplayName>
+      <Description>The path to the collection to be created with a unique name.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+    <DefinedExecutionErrors>
+      <Identifier>DataCollectionAlreadyExists</Identifier>
+      <Identifier>DataCollectionDoesNotExists</Identifier>
+    </DefinedExecutionErrors>
+  </Command>
+  <Command>
+    <Identifier>CreateDataItem</Identifier>
+    <DisplayName>Create new data item</DisplayName>
+    <Description>Creates a uniquely named data item inside of data collection and namespace.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ItemPath</Identifier>
+      <DisplayName>Item path</DisplayName>
+      <Description>The path to the data item to be created with a unique name inside of a collection and namespace.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>Content</Identifier>
+      <DisplayName>Content</DisplayName>
+      <Description>Content of data item.</Description>
+      <DataType>
+        <Basic>Binary</Basic>
+      </DataType>
+    </Parameter>
+    <Parameter>
+      <Identifier>ItemProperties</Identifier>
+      <DisplayName>Item Properties</DisplayName>
+      <Description>Properties of data item as key value pair.</Description>
+      <DataType>
+        <List>
+          <DataType>
+            <Structure>
+              <Element>
+                <Identifier>Key</Identifier>
+                <DisplayName>Key</DisplayName>
+                <Description>Key of key value pair.</Description>
+                <DataType>
+                  <Basic>String</Basic>
+                </DataType>
+              </Element>
+              <Element>
+                <Identifier>Value</Identifier>
+                <DisplayName>Value</DisplayName>
+                <Description>Value of key value pair as string.</Description>
+                <DataType>
+                  <Basic>String</Basic>
+                </DataType>
+              </Element>
+            </Structure>
+          </DataType>
+        </List>
+      </DataType>
+    </Parameter>
+    <DefinedExecutionErrors>
+      <Identifier>DataNamespaceNameDoesNotExist</Identifier>
+      <Identifier>DataCollectionDoesNotExists</Identifier>
+    </DefinedExecutionErrors>
+  </Command>
+  <Command>
+    <Identifier>GetDataItem</Identifier>
+    <DisplayName>Get data item</DisplayName>
+    <Description>Gets data item by name from collection and namespace.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ItemPath</Identifier>
+      <DisplayName>Item path</DisplayName>
+      <Description>The path to the data item inside of a collection and namespace.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+    <Response>
+      <Identifier>DataItemContent</Identifier>
+      <DisplayName>Data item content</DisplayName>
+      <Description>Content of the data item.</Description>
+      <DataType>
+        <Basic>Binary</Basic>
+      </DataType>
+    </Response>
+    <Response>
+      <Identifier>ItemProperties</Identifier>
+      <DisplayName>Item Properties</DisplayName>
+      <Description>Properties of data item.</Description>
+      <DataType>
+        <List>
+          <DataType>
+            <Structure>
+              <Element>
+                <Identifier>Key</Identifier>
+                <DisplayName>Key</DisplayName>
+                <Description>Key of key value pair.</Description>
+                <DataType>
+                  <Basic>String</Basic>
+                </DataType>
+              </Element>
+              <Element>
+                <Identifier>Value</Identifier>
+                <DisplayName>Value</DisplayName>
+                <Description>Value of key value pair as string.</Description>
+                <DataType>
+                  <Basic>String</Basic>
+                </DataType>
+              </Element>
+            </Structure>
+          </DataType>
+        </List>
+      </DataType>
+    </Response>
+    <DefinedExecutionErrors>
+      <Identifier>DataNamespaceNameDoesNotExist</Identifier>
+      <Identifier>DataCollectionDoesNotExists</Identifier>
+      <Identifier>DataItemDoesNotExists</Identifier>
+    </DefinedExecutionErrors>
+  </Command>
+  <DefinedExecutionError>
+    <Identifier>DataNamespaceAlreadyExists</Identifier>
+    <DisplayName>Data namespace already exists</DisplayName>
+    <Description>The data namespace with this name already exists.</Description>
+  </DefinedExecutionError>
+  <DefinedExecutionError>
+    <Identifier>DataNamespaceNameDoesNotExist</Identifier>
+    <DisplayName>Data namespace doest not exist exists</DisplayName>
+    <Description>The data namespace with this name does not exist.</Description>
+  </DefinedExecutionError>
+  <DefinedExecutionError>
+    <Identifier>DataCollectionAlreadyExists</Identifier>
+    <DisplayName>Data collection already exists</DisplayName>
+    <Description>The data collection with this name already exists.</Description>
+  </DefinedExecutionError>
+  <DefinedExecutionError>
+    <Identifier>DataCollectionDoesNotExists</Identifier>
+    <DisplayName>Data collection does not exists</DisplayName>
+    <Description>The data collection with this name does not exists.</Description>
+  </DefinedExecutionError>
+  <DefinedExecutionError>
+    <Identifier>DataItemDoesNotExists</Identifier>
+    <DisplayName>Data item does not exists</DisplayName>
+    <Description>The data item with this name does not exists.</Description>
+  </DefinedExecutionError>
+</Feature>
