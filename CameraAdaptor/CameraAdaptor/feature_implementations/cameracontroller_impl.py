@@ -9,6 +9,7 @@ import math
 import numpy as np
 import os
 import datetime
+import random
 
 from sila2.server import MetadataDict
 
@@ -66,6 +67,7 @@ class CameraControllerImpl(CameraControllerBase):
         surfaceTension = self._SurfaceTensionFromSDS(concentrationSDS=concentrationSDS)
         scalingFactor = self._ScalingFactorFromSurfaceTension(surfaceTension=surfaceTension)
 
+        scalingFactor += random.uniform(-0.005, 0.005)
         dropImage = self._GenerateImage(scalingFactor=scalingFactor)
         self.capture = self._add_random_noise(image=dropImage)
 
