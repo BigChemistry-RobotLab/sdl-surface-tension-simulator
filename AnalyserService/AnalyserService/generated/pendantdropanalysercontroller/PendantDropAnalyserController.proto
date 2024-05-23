@@ -15,6 +15,7 @@ service PendantDropAnalyserController {
 /* Parameters for AnalyseImage */
 message AnalyseImage_Parameters {
   sila2.org.silastandard.String ImagePath = 1;  /* File path from where to fetch the image to be analysed. */
+  sila2.org.silastandard.String ExperimentPlanPath = 2;  /* Storage location of the experiment plan in the form of a file path. */
 }
 
 /* Responses of AnalyseImage */

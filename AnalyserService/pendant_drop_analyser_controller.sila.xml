@@ -25,6 +25,14 @@
         <Basic>String</Basic>
       </DataType>
     </Parameter>
+    <Parameter>
+      <Identifier>ExperimentPlanPath</Identifier>
+      <DisplayName>Experiment plan path</DisplayName>
+      <Description>Storage location of the experiment plan in the form of a file path.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+     </Parameter>
   </Command>
 
   <Command>

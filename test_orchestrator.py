@@ -58,7 +58,7 @@ concentrationSDS = experimentPlan["concentrationSDS"]["concentration"]
 cameraClient.CameraController.CaptureImage(ExperimentPlanPath=f"namespace/{collectionName}/experiment_plan")
 cameraClient.CameraController.StoreImage(ItemPath=f"namespace/{collectionName}/image")
 
-analyserClient.PendantDropAnalyserController.AnalyseImage(ImagePath=f"namespace/{collectionName}/image")
+analyserClient.PendantDropAnalyserController.AnalyseImage(ImagePath=f"namespace/{collectionName}/image", ExperimentPlanPath=f"namespace/{collectionName}/experiment_plan")
 analyserClient.PendantDropAnalyserController.StoreAnalysisResulsts(ItemPath=f"namespace/{collectionName}/analysis")
 
 imageDataItem = dataClient.DataItemProvider.GetDataItem(ItemPath=f"namespace/{collectionName}/image")
@@ -84,7 +84,7 @@ while True:
         concentrationSDS = experimentPlan["concentrationSDS"]["concentration"]
         cameraClient.CameraController.CaptureImage(ExperimentPlanPath=f"namespace/{collectionName}/experiment_plan")
         cameraClient.CameraController.StoreImage(ItemPath=f"namespace/{collectionName}/image")
-        analyserClient.PendantDropAnalyserController.AnalyseImage(ImagePath=f"namespace/{collectionName}/image")
+        analyserClient.PendantDropAnalyserController.AnalyseImage(ImagePath=f"namespace/{collectionName}/image", ExperimentPlanPath=f"namespace/{collectionName}/experiment_plan")
         analyserClient.PendantDropAnalyserController.StoreAnalysisResulsts(ItemPath=f"namespace/{collectionName}/analysis")
         imageDataItem = dataClient.DataItemProvider.GetDataItem(ItemPath=f"namespace/{collectionName}/image")
         imageArray = np.asarray(bytearray(imageDataItem.DataItemContent), dtype="uint8")

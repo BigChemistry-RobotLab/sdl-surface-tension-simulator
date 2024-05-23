@@ -34,6 +34,14 @@ class ExperimentPlanProviderImpl(ExperimentPlanProviderBase):
             "concentrationSDS": {
                 "concentration": self.optamizer.mid,
                 "unit": "mM"
+            },
+            "needleDiameter": {
+                "diameter": 0.68,
+                "unit": "cm"
+            },
+            "density": {
+                "density": 0.999,
+                "unit": "g/cm3"
             }
         }
         return SubmitExperimentDesignPlan_Responses()
@@ -49,6 +57,14 @@ class ExperimentPlanProviderImpl(ExperimentPlanProviderBase):
                 "concentrationSDS": {
                     "concentration": self.optamizer.mid,
                     "unit": "mM"
+                },
+                "needleDiameter": {
+                    "diameter": 0.68,
+                    "unit": "cm"
+                },
+                "density": {
+                    "density": 0.999,
+                    "unit": "g/cm3"
                 }
             }
         else:

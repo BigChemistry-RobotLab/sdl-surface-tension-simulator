@@ -27,12 +27,16 @@ class PendantDropAnalyserControllerBase(FeatureImplementationBase, ABC):
         super().__init__(parent_server=parent_server)
 
     @abstractmethod
-    def AnalyseImage(self, ImagePath: str, *, metadata: MetadataDict) -> AnalyseImage_Responses:
+    def AnalyseImage(
+        self, ImagePath: str, ExperimentPlanPath: str, *, metadata: MetadataDict
+    ) -> AnalyseImage_Responses:
         """
         Retrieve an image from the data service and determine its interfacial tension.
 
 
         :param ImagePath: File path from where to fetch the image to be analysed.
+
+        :param ExperimentPlanPath: Storage location of the experiment plan in the form of a file path.
 
         :param metadata: The SiLA Client Metadata attached to the call
 
