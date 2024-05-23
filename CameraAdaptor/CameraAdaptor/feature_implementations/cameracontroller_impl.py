@@ -51,14 +51,24 @@ class CameraControllerImpl(CameraControllerBase):
         resized_drop = cv.resize(drop, (drop.shape[1], new_height), cv.INTER_LINEAR)
         background[drop_y_offset:drop_y_offset + new_height, drop_x_offset:drop_x_offset + drop.shape[1]] = resized_drop
         return background
+    
+    def _add_random_noise(self, image, intensity=30):
+        noisy_image = image.copy()
+        noise = np.random.randint(-intensity, intensity + 1, noisy_image.shape)
+        noisy_image = np.clip(noisy_image + noise, 0, 255).astype(np.uint8)
+        return noisy_image
 
     def CaptureImage(self, ExperimentPlanPath: str, *, metadata: MetadataDict) -> CaptureImage_Responses:
         experimentPlanItem = self.dataService.DataItemProvider.GetDataItem(ItemPath=ExperimentPlanPath)
         experimentPlan = json.loads(experimentPlanItem.DataItemContent.decode('utf-8'))
         concentrationSDS = experimentPlan["concentrationSDS"]["concentration"]
+
         surfaceTension = self._SurfaceTensionFromSDS(concentrationSDS=concentrationSDS)
         scalingFactor = self._ScalingFactorFromSurfaceTension(surfaceTension=surfaceTension)
-        self.capture = self._GenerateImage(scalingFactor=scalingFactor)
+
+        dropImage = self._GenerateImage(scalingFactor=scalingFactor)
+        self.capture = self._add_random_noise(image=dropImage)
+
         self.captureTime = datetime.datetime.now().timestamp()
         return CaptureImage_Responses()
 
