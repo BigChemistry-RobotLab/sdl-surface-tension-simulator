@@ -35,7 +35,7 @@ class BinarySearchControllerImpl(BinarySearchControllerBase):
     def UpdateSearchRange(self, MeasurementPath: str, *, metadata: MetadataDict) -> UpdateSearchRange_Responses:
         measurementItem = self.dataService.DataItemProvider.GetDataItem(ItemPath=MeasurementPath)
         measurement = float(measurementItem.DataItemContent.decode('utf-8'))
-        if measurement < self.target:
+        if measurement > self.target:
             self.low = self.mid
         else:
             self.high = self.mid
