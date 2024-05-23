@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+import "SiLAFramework.proto";
+
+package sila2.org.silastandard.examples.cameracontroller.v1;
+
+/* Camera provider server that captures and stores a single image with the connected camera. In the mocked state the concentration of SDS is retrieved from the data service, this concentration is used to generate an image approximately representing the drop as it would look with that concentration of SDS. */
+service CameraController {
+  /* Capture a single image with the connected camera. */
+  rpc CaptureImage (sila2.org.silastandard.examples.cameracontroller.v1.CaptureImage_Parameters) returns (sila2.org.silastandard.examples.cameracontroller.v1.CaptureImage_Responses) {}
+  /* Store image in experimental data storage */
+  rpc StoreImage (sila2.org.silastandard.examples.cameracontroller.v1.StoreImage_Parameters) returns (sila2.org.silastandard.examples.cameracontroller.v1.StoreImage_Responses) {}
+}
+
+/* Parameters for CaptureImage */
+message CaptureImage_Parameters {
+  sila2.org.silastandard.String ExperimentPlanPath = 1;  /* Storage location of the experiment plan in the form of a file path. */
+}
+
+/* Responses of CaptureImage */
+message CaptureImage_Responses {
+}
+
+/* Parameters for StoreImage */
+message StoreImage_Parameters {
+  sila2.org.silastandard.String ItemPath = 1;  /* Storage location of the data item in the form of a file path. */
+}
+
+/* Responses of StoreImage */
+message StoreImage_Responses {
+}

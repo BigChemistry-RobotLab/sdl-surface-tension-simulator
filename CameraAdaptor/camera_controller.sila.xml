@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Feature SiLA2Version="1.0" FeatureVersion="1.0" MaturityLevel="Verified"
+  Originator="org.silastandard"
+  Category="examples"
+  xmlns="http://www.sila-standard.org"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>CameraController</Identifier>
+  <DisplayName>Camera controller</DisplayName>
+  <Description>
+    Camera provider server that captures and stores a single image with the connected camera. 
+    In the mocked state the concentration of SDS is retrieved from the data service, 
+    this concentration is used to generate an image approximately representing the drop as it would look with that concentration of SDS.
+  </Description>
+
+  <Command>
+    <Identifier>CaptureImage</Identifier>
+    <DisplayName>Cature image</DisplayName>
+    <Description>Capture a single image with the connected camera.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ExperimentPlanPath</Identifier>
+      <DisplayName>Experiment plan path</DisplayName>
+      <Description>Storage location of the experiment plan in the form of a file path.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+     </Parameter>
+  </Command>
+
+  <Command>
+    <Identifier>StoreImage</Identifier>
+    <DisplayName>Store Image</DisplayName>
+    <Description>Store image in experimental data storage</Description>
+    <Observable>No</Observable>
+    <Parameter>
+     <Identifier>ItemPath</Identifier>
+     <DisplayName>Item path</DisplayName>
+     <Description>Storage location of the data item in the form of a file path.</Description>
+     <DataType>
+       <Basic>String</Basic>
+     </DataType>
+    </Parameter>
+   </Command>
+</Feature>
