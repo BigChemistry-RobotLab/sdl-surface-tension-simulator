@@ -6,6 +6,7 @@ import cv2 as cv
 from DataService.DataService import Server as DataService, Client as DataClient
 from AnalyserService.AnalyserService import Server as AnalyserService, Client as AnalyserClient
 import unittest
+import json
 
 SERVER_ADDRESS = "127.0.0.1"
 
@@ -36,21 +37,36 @@ class TestPendantDropAnalyser(unittest.TestCase):
         self.dataClient.DataItemProvider.CreateDataNamespace(DataNamespaceName="namespace")
         self.dataClient.DataItemProvider.CreateDataCollection(CollectionPath="namespace/collection")
 
+        # Store experiment plan with only neccesary analysis parameters
+        experimentPlan = {
+                "needleDiameter": {
+                    "diameter": 0.68,
+                    "unit": "cm"
+                },
+                "density": {
+                    "density": 0.999,
+                    "unit": "g/cm3"
+                }
+            }
+
+        self.dataClient.DataItemProvider.CreateDataItem(
+            ItemPath="namespace/collection/plan",
+            Content= json.dumps(experimentPlan).encode(encoding='utf-8'),
+            ItemProperties=[]
+        )
+
         # Read test image and store it in data service
         image = cv.imread("pendant_drop.jpg")
         imageBytes = cv.imencode('.jpg', image)[1].tobytes()
         self.dataClient.DataItemProvider.CreateDataItem(
             ItemPath="namespace/collection/test_image",
             Content=imageBytes,
-            ItemProperties=[
-                tuple(["needle_diameter", f"{0.68}"]),
-                tuple(["density", f"{0.999}"]),
-            ]
+            ItemProperties=[]
         )
 
     def test_pendant_drop_analyser(self):
         # Determine the interfacial surface tension of the stored test image
-        self.analyserClient.PendantDropAnalyserController.AnalyseImage(ImagePath="namespace/collection/test_image")
+        self.analyserClient.PendantDropAnalyserController.AnalyseImage(ImagePath="namespace/collection/test_image", ExperimentPlanPath="namespace/collection/plan")
         
         # Store interfacial surface tension in data service
         self.analyserClient.PendantDropAnalyserController.StoreAnalysisResulsts(ItemPath="namespace/collection/analysis")
