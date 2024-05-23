@@ -26,7 +26,7 @@ class PendantDropAnalyserControllerClient:
     """
 
     def AnalyseImage(
-        self, ImagePath: str, *, metadata: Optional[Iterable[ClientMetadataInstance]] = None
+        self, ImagePath: str, ExperimentPlanPath: str, *, metadata: Optional[Iterable[ClientMetadataInstance]] = None
     ) -> AnalyseImage_Responses:
         """
         Retrieve an image from the data service and determine its interfacial tension.

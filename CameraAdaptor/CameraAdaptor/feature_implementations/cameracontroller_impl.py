@@ -70,8 +70,6 @@ class CameraControllerImpl(CameraControllerBase):
                 tuple(["creationTime", f"{self.captureTime}"]),
                 tuple(["height", f"{IMAGE_HEIGHT}"]),
                 tuple(["width", f"{IMAGE_WIDTH}"]),
-                tuple(["needle_diameter", f"{0.68}"]),
-                tuple(["density", f"{0.999}"]),
             ]
         )
         return StoreImage_Responses()

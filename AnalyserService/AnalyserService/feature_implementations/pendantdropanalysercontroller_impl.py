@@ -9,6 +9,7 @@ import numpy as np
 import itertools
 import cv2 as cv
 import datetime
+import json
 
 from sila2.server import MetadataDict
 
@@ -95,18 +96,17 @@ class PendantDropAnalyserControllerImpl(PendantDropAnalyserControllerBase):
             if 15 < interfacial_tension < 300:
                 return interfacial_tension
 
-    def GetDatItemPropertyByKey(self, properties, key: str):
-        for property in properties:
-            if property[0] == key:
-                return property
-        return None
-
-    def AnalyseImage(self, ImagePath: str, *, metadata: MetadataDict) -> AnalyseImage_Responses:
+    def AnalyseImage(
+        self, ImagePath: str, ExperimentPlanPath: str, *, metadata: MetadataDict
+    ) -> AnalyseImage_Responses:
         imageDataItem = self.dataService.DataItemProvider.GetDataItem(ItemPath=ImagePath)
         imageArray = np.asarray(bytearray(imageDataItem.DataItemContent), dtype="uint8")
         image = cv.imdecode(buf=imageArray, flags=cv.IMREAD_COLOR)
-        needleDiameter = float(self.GetDatItemPropertyByKey(properties=imageDataItem.ItemProperties, key='needle_diameter')[1])
-        density = float(self.GetDatItemPropertyByKey(properties=imageDataItem.ItemProperties, key='density')[1])
+
+        experimentPlanItem = self.dataService.DataItemProvider.GetDataItem(ItemPath=ExperimentPlanPath)
+        experimentPlan = json.loads(experimentPlanItem.DataItemContent.decode('utf-8'))
+        needleDiameter = experimentPlan["needleDiameter"]["diameter"]
+        density = experimentPlan["density"]["density"]
         self.interfacial_tension = self.DetermineInterfacialSurfaceTension(image=image, needleDiameter=needleDiameter, density=density)
         self.analysisTimeStamp = datetime.datetime.now().timestamp()
         return AnalyseImage_Responses()
