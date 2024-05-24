@@ -18,8 +18,8 @@ from ..generated.cameracontroller import CameraControllerBase, CaptureImage_Resp
 if TYPE_CHECKING:
     from ..server import Server
 
-IMAGE_HEIGHT = 550
-IMAGE_WIDTH = 550
+IMAGE_HEIGHT = 800
+IMAGE_WIDTH = 800
 
 class CameraControllerImpl(CameraControllerBase):
     def __init__(self, parent_server: Server) -> None:
@@ -32,19 +32,22 @@ class CameraControllerImpl(CameraControllerBase):
         else:
             return -0.2893 * concentrationSDS + 39.898
 
-    #TODO use polynomial formula once i figure out how to work with Excel
     def _ScalingFactorFromSurfaceTension(self, surfaceTension):
-        return -0.0043 * surfaceTension + 1.3018
+        return -0.00000212063315209107*surfaceTension**3 + 0.0004471918*surfaceTension**2 - 0.0333664627*surfaceTension + 1.8791299508
 
     def _GenerateImage(self, scalingFactor):
+        scaler = 1.5
         pipette = cv.imread(os.path.abspath("CameraAdaptor/CameraAdaptor/feature_implementations/pipette.jpg"))
+        pipette = cv.resize(pipette, (math.floor(pipette.shape[1]*scaler), math.floor(pipette.shape[0]*scaler)), cv.INTER_LINEAR)
         drop = cv.imread(os.path.abspath("CameraAdaptor/CameraAdaptor/feature_implementations/drop.jpg"))
+        drop = cv.resize(drop, (math.floor(drop.shape[1]*scaler), math.floor(drop.shape[0]*scaler)), cv.INTER_LINEAR)
+
         background = np.full((IMAGE_HEIGHT, IMAGE_WIDTH, 3), 255, dtype = np.uint8) 
 
         pipette_y_offset = 0
         pipette_x_offset = math.floor((IMAGE_WIDTH / 2) - (pipette.shape[1] / 2))
         drop_y_offset = pipette.shape[0]
-        drop_x_offset = math.floor((IMAGE_WIDTH / 2) - (drop.shape[1] / 2)) + 10
+        drop_x_offset = math.floor((IMAGE_WIDTH / 2) - (drop.shape[1] / 2)) + 15
 
         background[pipette_y_offset:pipette_y_offset + pipette.shape[0], pipette_x_offset:pipette_x_offset + pipette.shape[1]] = pipette
         
@@ -67,7 +70,7 @@ class CameraControllerImpl(CameraControllerBase):
         surfaceTension = self._SurfaceTensionFromSDS(concentrationSDS=concentrationSDS)
         scalingFactor = self._ScalingFactorFromSurfaceTension(surfaceTension=surfaceTension)
 
-        scalingFactor += random.uniform(-0.005, 0.005)
+        scalingFactor += random.uniform(-0.002, 0.002)
         dropImage = self._GenerateImage(scalingFactor=scalingFactor)
         self.capture = self._add_random_noise(image=dropImage)
 
