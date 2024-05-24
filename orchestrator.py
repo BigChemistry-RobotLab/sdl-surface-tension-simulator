@@ -23,7 +23,10 @@ ANALYSER_SERVICE_NAME = "AnalyserService"
 ANALYSER_SERVICE_PORT = 50053
 
 
-@flow
+@flow(
+        name="Surface tension taget campaign",
+        description="Tries to reach a target interfacial surface tension of a pendant drop using binary search, each experiment a new drop is created based on a concentration of SDS."
+    )
 def RunCampaign():
     experimentIndex = 0
     collectionName = f"collection_{experimentIndex}"
@@ -72,20 +75,33 @@ def DisplayImage(imagePath):
     cv.waitKey(100)
 
 
-@task
+@task(
+        "Capture image", 
+        description="Generates image from SDS concentration in experiment plan, and stores the image in the data service", 
+        tags=["Observe"]
+    )
 def CaptureImage(experimentPlanPath, imageStoragePath):
     cameraClient.CameraController.CaptureImage(experimentPlanPath)
     cameraClient.CameraController.StoreImage(ItemPath=imageStoragePath)
 
 
-@task
+@task(
+        name="Analyse image", 
+        description="Retrieves image from data service, analyses it and stores analysis in data service.",
+        tags=["Orient"]
+    )
 def AnalyseImage(imagePath, experimentPlanPath, analysisStoragePath):
     analyserClient.PendantDropAnalyserController.AnalyseImage(
         ImagePath=imagePath, ExperimentPlanPath=experimentPlanPath)
     analyserClient.PendantDropAnalyserController.StoreAnalysisResulsts(
         ItemPath=analysisStoragePath)
 
-@task
+
+@task(
+        name="Plan new experiment", 
+        description="Retreives analysis result from previous experiment, calulates midpoint with binary search, creates new experiment plan and stores it in data service.",
+        tags=["Decide"]
+    )
 def PlanExperiment(previousAnalysisPath, experimentPlanStoragePath):
     plannerClient.BinarySearchController.UpdateSearchRange(
         MeasurementPath=previousAnalysisPath)
@@ -96,7 +112,11 @@ def PlanExperiment(previousAnalysisPath, experimentPlanStoragePath):
         ItemPath=experimentPlanStoragePath)
 
 
-@task
+@task(
+        name="Initialize experiment plan", 
+        description="Initializes variables for binary search, calculates midpoint for initial experiment, sbumits initial experiment design plan with variables and stores that experiment plan in the data store.",
+        tags=["Decide"]
+    )
 def InitializeExperimentPlan(experimentPlanStoragePath):
     plannerClient.BinarySearchController.InitializeExperimentParameters(
         High=100, Low=0, Target=42)
@@ -107,7 +127,11 @@ def InitializeExperimentPlan(experimentPlanStoragePath):
         ItemPath=experimentPlanStoragePath)
 
 
-@task
+@task(
+        name="Prepare drop",
+        description="Prepares drop using the opentron (doenst really have any impact on the flow, but is only for simulation purposes)",
+        tags=["Act"]
+)
 def PrepareDrop():
     time.sleep(0.1)
 
