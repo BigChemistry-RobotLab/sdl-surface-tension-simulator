@@ -41,7 +41,8 @@ def DisplayGraph(dataClient: DataClient, surfaceTensionPath, experimentPlanPath)
         ItemPath=experimentPlanPath)
     experimentPlan = json.loads(
         experimentPlanItem.DataItemContent.decode('utf-8'))
-    x.append(experimentPlan["concentrationSDS"]["concentration"])
+    concentrationSDS = experimentPlan["concentrationSDS"]["concentration"]
+    x.append(concentrationSDS)
     surfaceTensionItem = dataClient.DataItemProvider.GetDataItem(
         ItemPath=surfaceTensionPath)
     surfaceTension = float(surfaceTensionItem.DataItemContent.decode('utf-8'))
@@ -52,6 +53,8 @@ def DisplayGraph(dataClient: DataClient, surfaceTensionPath, experimentPlanPath)
     plt.set_xlim([0, 20])
     plt.axhline(y=surfaceTension, color="r")
     plt.text(2, surfaceTension, "{:.2f}".format(surfaceTension), fontsize=10, va='center', ha='center', backgroundcolor='w')
+    plt.axvline(x=concentrationSDS, color="r")
+    plt.text(concentrationSDS, 32, "{:.3f}".format(concentrationSDS), fontsize=10, va='center', ha='center', backgroundcolor='w')
     plt.set_xlabel("Concentration SDS")
     plt.set_ylabel("Surface tension")
     canvas.draw()
