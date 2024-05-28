@@ -25,7 +25,12 @@ frame2 = LabelFrame(
 frame2.grid(row=0, column=1)
 fig = Figure(figsize=(5, 4), dpi=100)
 canvas = FigureCanvasTkAgg(figure=fig, master=frame2)
+statusLabel = Label(master=frame2)
+statusLabel.pack()
 
+targetLabelText = Label(master=frame1, text="target value")
+targetLabelText.pack()
+statusLabel.pack()
 targetVar = IntVar(value=42)
 targetLabel = Entry(master=frame1, textvariable=targetVar)
 targetLabel.pack()
@@ -70,6 +75,12 @@ def DisplayDrop(dataClient: DataClient, imagePath: str):
     dropImageLabel.configure(image=tk_image)
 
 def click():
+    del x[:]
+    del y[:]
+    plt = fig.add_subplot(111)
+    plt.remove()
+    canvas.draw()
+    canvas.get_tk_widget().pack()
     button.config(state="disabled")
     update_thread = threading.Thread(target=RunCampaign)
     update_thread.start()
@@ -94,6 +105,9 @@ CAMERA_ADAPTOR_PORT = 50055
 ANALYSER_SERVICE_NAME = "AnalyserService"
 ANALYSER_SERVICE_PORT = 50053
 
+WAIT_TIME = 0.2
+TOLERANCE = 0.25
+
 
 @flow(
     name="Surface tension taget campaign",
@@ -101,6 +115,7 @@ ANALYSER_SERVICE_PORT = 50053
 )
 def RunCampaign():
     try:
+        statusLabel.config(text="Starting services")
         dataService = DataService(name=DATA_SERVICE_NAME)
         dataService.start_insecure(
             address=SERVER_ADDRESS, port=DATA_SERVICE_PORT)
@@ -138,10 +153,10 @@ def RunCampaign():
         PrepareDrop()
         CaptureImage(cameraClient=cameraClient, experimentPlanPath=f"namespace/{collectionName}/experiment_plan",
                      imageStoragePath=f"namespace/{collectionName}/image")
-        AnalyseImage(analyserClient=analyserClient, imagePath=f"namespace/{collectionName}/image", experimentPlanPath=f"namespace/{collectionName}/experiment_plan",
-                     analysisStoragePath=f"namespace/{collectionName}/analysis")
         DisplayDrop(dataClient=dataClient,
                     imagePath=f"namespace/{collectionName}/image")
+        AnalyseImage(analyserClient=analyserClient, imagePath=f"namespace/{collectionName}/image", experimentPlanPath=f"namespace/{collectionName}/experiment_plan",
+                     analysisStoragePath=f"namespace/{collectionName}/analysis")
         DisplayGraph(dataClient=dataClient,
                      surfaceTensionPath=f"namespace/{collectionName}/analysis", experimentPlanPath=f"namespace/{collectionName}/experiment_plan")
 
@@ -160,18 +175,20 @@ def RunCampaign():
                 PrepareDrop()
                 CaptureImage(cameraClient=cameraClient, experimentPlanPath=f"namespace/{collectionName}/experiment_plan",
                              imageStoragePath=f"namespace/{collectionName}/image")
-                AnalyseImage(analyserClient=analyserClient, imagePath=f"namespace/{collectionName}/image", experimentPlanPath=f"namespace/{collectionName}/experiment_plan",
-                             analysisStoragePath=f"namespace/{collectionName}/analysis")
                 DisplayDrop(dataClient=dataClient,
                             imagePath=f"namespace/{collectionName}/image")
+                AnalyseImage(analyserClient=analyserClient, imagePath=f"namespace/{collectionName}/image", experimentPlanPath=f"namespace/{collectionName}/experiment_plan",
+                             analysisStoragePath=f"namespace/{collectionName}/analysis")
                 DisplayGraph(dataClient=dataClient,
                              surfaceTensionPath=f"namespace/{collectionName}/analysis", experimentPlanPath=f"namespace/{collectionName}/experiment_plan")
     finally:
+        statusLabel.config(text="Shutting down services")
         dataService.stop()
         plannerService.stop()
         cameraAdaptor.stop()
         analyserService.stop()
 
+        statusLabel.config(text="Target interfacial surface tension reached!")
         button.config(state="active")
 
 @task(
@@ -180,7 +197,11 @@ def RunCampaign():
     tags=["Observe"]
 )
 def CaptureImage(cameraClient: CameraClient, experimentPlanPath, imageStoragePath):
+    statusLabel.config(text="Capturing image")
+    time.sleep(WAIT_TIME)
     cameraClient.CameraController.CaptureImage(experimentPlanPath)
+    time.sleep(WAIT_TIME)
+    statusLabel.config(text="Storing image")
     cameraClient.CameraController.StoreImage(ItemPath=imageStoragePath)
 
 @task(
@@ -189,8 +210,12 @@ def CaptureImage(cameraClient: CameraClient, experimentPlanPath, imageStoragePat
     tags=["Orient"]
 )
 def AnalyseImage(analyserClient: AnalyserClient, imagePath, experimentPlanPath, analysisStoragePath):
+    statusLabel.config(text="Analysing image")
+    time.sleep(WAIT_TIME)
     analyserClient.PendantDropAnalyserController.AnalyseImage(
         ImagePath=imagePath, ExperimentPlanPath=experimentPlanPath)
+    statusLabel.config(text="Storing analysis")
+    time.sleep(WAIT_TIME)
     analyserClient.PendantDropAnalyserController.StoreAnalysisResulsts(
         ItemPath=analysisStoragePath)
 
@@ -200,11 +225,19 @@ def AnalyseImage(analyserClient: AnalyserClient, imagePath, experimentPlanPath, 
     tags=["Decide"]
 )
 def PlanExperiment(plannerClient: PlannerClient, previousAnalysisPath, experimentPlanStoragePath):
+    statusLabel.config(text="Updating binary search range")
+    time.sleep(WAIT_TIME)
     plannerClient.BinarySearchController.UpdateSearchRange(
         MeasurementPath=previousAnalysisPath)
+    statusLabel.config(text="Calucating search space midpoint")
+    time.sleep(WAIT_TIME)
     plannerClient.BinarySearchController.CalculateMidPoint()
+    statusLabel.config(text="Creating experiment plan")
+    time.sleep(WAIT_TIME)
     plannerClient.ExperimentPlanProvider.CreateExperimentPlan(
         PreviousMeasurementItemPath=previousAnalysisPath)
+    statusLabel.config(text="Storing experiment plan")
+    time.sleep(WAIT_TIME)
     plannerClient.ExperimentPlanProvider.StoreExperimentPlan(
         ItemPath=experimentPlanStoragePath)
 
@@ -216,9 +249,15 @@ def PlanExperiment(plannerClient: PlannerClient, previousAnalysisPath, experimen
 def InitializeExperimentPlan(plannerClient: PlannerClient, experimentPlanStoragePath):
     plannerClient.BinarySearchController.InitializeExperimentParameters(
         High=20, Low=0, Target=targetVar.get())
+    statusLabel.config(text="Calucating search space midpoint")
+    time.sleep(WAIT_TIME)
     plannerClient.BinarySearchController.CalculateMidPoint()
+    statusLabel.config(text="Initializing experiment plan")
+    time.sleep(WAIT_TIME)
     plannerClient.ExperimentPlanProvider.SubmitExperimentDesignPlan(
-        Target=targetVar.get(), Tolerance=0.25)
+        Target=targetVar.get(), Tolerance=TOLERANCE)
+    statusLabel.config(text="Storing experiment plan")
+    time.sleep(WAIT_TIME)
     plannerClient.ExperimentPlanProvider.StoreExperimentPlan(
         ItemPath=experimentPlanStoragePath)
 
@@ -228,7 +267,8 @@ def InitializeExperimentPlan(plannerClient: PlannerClient, experimentPlanStorage
     tags=["Act"]
 )
 def PrepareDrop():
-    time.sleep(0.1)
+    statusLabel.config(text="Preparing pendant drop")
+    time.sleep(WAIT_TIME)
 
 if __name__ == "__main__":
     window()
