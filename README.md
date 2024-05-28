@@ -7,6 +7,9 @@ This project showcases a high-level architecture for a self-driving laboratory u
 * [Technologies Used](#technologies-used)
 * [Screenshots](#screenshots)
 * [Setup](#setup)
+* [Architecture](#architecture)
+    * [High Level Architecture](#high-level-architecture)
+    * [Microservice Architecture](#microservice-architecture)
 
 ## General Information
 The goal of this project is to determine how well the INTERSECT Open Architecture aligns with the goals of the RobotLab project. The INTERSECT open architecture describes an open federated architecture networked system of SDLs and instruments that work together to conduct and analyse experiments autonomously. The assessment is conducted by applying the architecture to one of RobotLab's experimental use cases. The interfacial surface tension use case from Radboud University was selected for its clarity and advanced development stage.
