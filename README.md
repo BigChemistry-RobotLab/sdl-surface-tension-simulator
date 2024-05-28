@@ -37,7 +37,7 @@ Install the requirements.
 
 `pip install -r requirements.txt`
 
-Start the orchestrator which contains the interface.
+Start the orchestrator which contains the user interface of the demonstrator.
 
 `python orchestrator.py`
 
