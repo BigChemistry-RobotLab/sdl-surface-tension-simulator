@@ -7,6 +7,7 @@ This project showcases a high-level architecture for a self-driving laboratory u
 * [Technologies Used](#technologies-used)
 * [Screenshots](#screenshots)
 * [Setup](#setup)
+* [Running The simulator](#running-the-simulator)
 * [Architecture](#architecture)
     * [High Level Architecture](#high-level-architecture)
     * [Microservice Architecture](#microservice-architecture)
@@ -25,7 +26,8 @@ This project utilizes the following packages, among others:
 ![Interface](./examples/interface.png)
 
 ## Setup
-To get started with this project first this project must be cloned.
+
+To get started with this project first this project must be cloned from GitLab.
 
 `git clone https://git.fhict.nl/coe-htsm/sdl-surface-tension-simulator.git`
 
@@ -37,15 +39,15 @@ Install the requirements.
 
 `pip install -r requirements.txt`
 
-Start the orchestrator which contains the user interface of the demonstrator.
+## Running The simulator
+
+(Optional) Start the Prefect server in another terminal. This server is hosted at [127.0.0.1:4200](127.0.0.1:4200)
 
 `prefect server start`
 
-This server is hosted at [127.0.0.1:4200](127.0.0.1:4200)
+Start the orchestrator which contains the user interface of the demonstrator.
 
 `python orchestrator.py`
-
-Start the Prefect server in another terminal (Optional)
 
 ## Architecture
 
