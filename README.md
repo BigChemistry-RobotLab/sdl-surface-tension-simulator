@@ -27,11 +27,11 @@ This project utilizes the following packages, among others:
 ## Setup
 To get started with this project first this project must be cloned.
 
-`git clone https://git.fhict.nl/coe-htsm/dsl-surface-tension-simulator.git`
+`git clone https://git.fhict.nl/coe-htsm/sdl-surface-tension-simulator.git`
 
 CD into the directory
 
-`CD dsl-surface-tension-simulator`
+`CD sdl-surface-tension-simulator`
 
 Install the requirements.
 
@@ -39,13 +39,13 @@ Install the requirements.
 
 Start the orchestrator which contains the user interface of the demonstrator.
 
-`python orchestrator.py`
-
-Start the Prefect server (Optional)
-
 `prefect server start`
 
 This server is hosted at [127.0.0.1:4200](127.0.0.1:4200)
+
+`python orchestrator.py`
+
+Start the Prefect server in another terminal (Optional)
 
 ## Architecture
 
@@ -62,6 +62,6 @@ The microservice architecture implements the components described in the high-le
 ## Room for Improvement
 
 ## Acknowledgements
-* Thanks to the team from RadBoud University for providing their use case and the great feedback and help.
+* Thanks to the team from RadBoud University for providing their use case and the great feedback.
 
  
