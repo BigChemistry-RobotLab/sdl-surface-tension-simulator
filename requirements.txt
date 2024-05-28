@@ -1,0 +1,9 @@
+imutils==0.5.4
+matplotlib==3.8.4
+numpy==1.26.4
+opencv_python==4.9.0.80
+Pillow==10.3.0
+prefect==2.18.0
+scipy==1.13.1
+sila2==0.12.2
+typer==0.12.3
