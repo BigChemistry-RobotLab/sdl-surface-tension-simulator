@@ -36,7 +36,7 @@ class CameraControllerImpl(CameraControllerBase):
         return -0.00000212063315209107*surfaceTension**3 + 0.0004471918*surfaceTension**2 - 0.0333664627*surfaceTension + 1.8791299508
 
     def _GenerateImage(self, scalingFactor):
-        scaler = 1.3
+        scaler = 1.4
         pipette = cv.imread(os.path.abspath("CameraAdaptor/CameraAdaptor/feature_implementations/pipette.jpg"))
         pipette = cv.resize(pipette, (math.floor(pipette.shape[1]*scaler), math.floor(pipette.shape[0]*scaler)), cv.INTER_LINEAR)
         drop = cv.imread(os.path.abspath("CameraAdaptor/CameraAdaptor/feature_implementations/drop.jpg"))
