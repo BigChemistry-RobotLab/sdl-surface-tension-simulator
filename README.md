@@ -22,7 +22,7 @@ This project utilizes the following packages, among others:
 - [opencv-python](https://pypi.org/project/opencv-python/) To generate and analyse the pendant drop images.
 
 ## Screenshots
-![Interface](./examples/interface.JPG)
+![Interface](./examples/interface.png)
 
 ## Setup
 To get started with this project first this project must be cloned.
