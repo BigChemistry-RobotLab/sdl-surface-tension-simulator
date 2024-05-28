@@ -12,46 +12,68 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import threading
 from PIL import Image, ImageTk
+import math
 
 # --------------------------- Iterface ---------------------------
 root = Tk()
-frame1 = LabelFrame(master=root, text="Drop Image", padx=15, pady=15)
-frame1.grid(row=0, column=0)
-dropImageLabel = Label(master=frame1)
-dropImageLabel.pack()
 
-frame2 = LabelFrame(
-    master=root, text="Surface Tension Graph", padx=15, pady=15)
-frame2.grid(row=0, column=1)
-fig = Figure(figsize=(5, 4), dpi=100)
-canvas = FigureCanvasTkAgg(figure=fig, master=frame2)
-statusLabel = Label(master=frame2)
-statusLabel.pack()
+variableFrame = LabelFrame(
+    master=root, text="Simulation variables", padx=15, pady=15)
+variableFrame.grid(row=0, column=0, sticky="nsew")
 
-targetLabelText = Label(master=frame1, text="Target surface tension")
+targetLabelText = Label(master=variableFrame, text="Target surface tension")
 targetLabelText.pack()
 targetVar = IntVar(value=42)
-targetLabel = Entry(master=frame1, textvariable=targetVar)
+targetLabel = Entry(master=variableFrame, textvariable=targetVar)
 targetLabel.pack()
 
-lowLabelText = Label(master=frame1, text="Low (concentration SDS)")
+lowLabelText = Label(master=variableFrame, text="Low (concentration SDS)")
 lowLabelText.pack()
 lowVar = IntVar(value=0)
-lowVar = Entry(master=frame1, textvariable=lowVar)
+lowVar = Entry(master=variableFrame, textvariable=lowVar)
 lowVar.pack()
 
-highLabelText = Label(master=frame1, text="High (concentration SDS)")
+highLabelText = Label(master=variableFrame, text="High (concentration SDS)")
 highLabelText.pack()
 highVar = IntVar(value=20)
-highVar = Entry(master=frame1, textvariable=highVar)
+highVar = Entry(master=variableFrame, textvariable=highVar)
 highVar.pack()
 
-button = Button(master=frame1, text="Run campaign")
+simulationSpeedLabelText = Label(master=variableFrame, text="Simulation Step Delay")
+simulationSpeedLabelText.pack()
+simulationSpeedVar = IntVar(value=0.5)
+simulationSpeedVar = Entry(master=variableFrame, textvariable=simulationSpeedVar)
+simulationSpeedVar.pack()
+
+button = Button(master=variableFrame, text="Run campaign")
 button.pack()
+
+progressFrame = LabelFrame(
+    master=root, text="Progress", padx=15, pady=15)
+progressFrame.grid(row=0, column=1, sticky="nsew")
+
+ExperimentName = Label(master=progressFrame)
+ExperimentName.pack()
+
+statusLabel = Label(master=progressFrame)
+statusLabel.pack()
+
+imageFrame = LabelFrame(master=root, text="Drop Image", padx=15, pady=15)
+imageFrame.grid(row=1, column=0, sticky="nsew")
+
+dropImageLabel = Label(master=imageFrame)
+dropImageLabel.pack()
+
+graphFrame = LabelFrame(
+    master=root, text="Surface Tension Graph", padx=15, pady=15)
+graphFrame.grid(row=1, column=1, sticky="nsew")
+
+fig = Figure(figsize=(5, 4), dpi=100)
+canvas = FigureCanvasTkAgg(figure=fig, master=graphFrame)
+
 
 x = []
 y = []
-
 
 def DisplayGraph(dataClient: DataClient, surfaceTensionPath, experimentPlanPath):
     experimentPlanItem = dataClient.DataItemProvider.GetDataItem(
@@ -79,11 +101,11 @@ def DisplayGraph(dataClient: DataClient, surfaceTensionPath, experimentPlanPath)
     canvas.draw()
     canvas.get_tk_widget().pack()
 
-
 def DisplayDrop(dataClient: DataClient, imagePath: str):
     imageDataitem = dataClient.DataItemProvider.GetDataItem(ItemPath=imagePath)
     nparr = np.asarray(bytearray(imageDataitem.DataItemContent), dtype="uint8")
     image = cv.imdecode(buf=nparr, flags=cv.IMREAD_COLOR)
+    image = cv.resize(image, (400, 400), cv.INTER_LINEAR)
     pil_image = Image.fromarray(image)
     tk_image = ImageTk.PhotoImage(pil_image)
     dropImageLabel.image = tk_image
@@ -103,11 +125,9 @@ def click():
 
 button.config(command=click)
 
-
 def window():
     root.mainloop()
 # ------------------------- Orchestrator -------------------------
-
 
 SERVER_ADDRESS = "127.0.0.1"
 
@@ -165,6 +185,8 @@ def RunCampaign():
 
         dataClient.DataItemProvider.CreateDataCollection(
             CollectionPath=f"namespace/{collectionName}")
+        
+        ExperimentName.configure(text="Initial experiment")
 
         InitializeExperimentPlan(plannerClient=plannerClient,
                                  experimentPlanStoragePath=f"namespace/{collectionName}/experiment_plan")
@@ -180,6 +202,7 @@ def RunCampaign():
 
         while True:
             experimentIndex += 1
+            ExperimentName.configure(text=f"Experiment nr.{experimentIndex}")
             collectionName = f"collection_{experimentIndex}"
             dataClient.DataItemProvider.CreateDataCollection(
                 CollectionPath=f"namespace/{collectionName}")
@@ -209,7 +232,6 @@ def RunCampaign():
         statusLabel.config(text="Target interfacial surface tension reached!")
         button.config(state="active")
 
-
 @task(
     name="Capture image",
     description="Generates image from SDS concentration in experiment plan, and stores the image in the data service",
@@ -217,12 +239,11 @@ def RunCampaign():
 )
 def CaptureImage(cameraClient: CameraClient, experimentPlanPath, imageStoragePath):
     statusLabel.config(text="Capturing image")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     cameraClient.CameraController.CaptureImage(experimentPlanPath)
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     statusLabel.config(text="Storing image")
     cameraClient.CameraController.StoreImage(ItemPath=imageStoragePath)
-
 
 @task(
     name="Analyse image",
@@ -231,14 +252,13 @@ def CaptureImage(cameraClient: CameraClient, experimentPlanPath, imageStoragePat
 )
 def AnalyseImage(analyserClient: AnalyserClient, imagePath, experimentPlanPath, analysisStoragePath):
     statusLabel.config(text="Analysing image")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     analyserClient.PendantDropAnalyserController.AnalyseImage(
         ImagePath=imagePath, ExperimentPlanPath=experimentPlanPath)
     statusLabel.config(text="Storing analysis")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     analyserClient.PendantDropAnalyserController.StoreAnalysisResulsts(
         ItemPath=analysisStoragePath)
-
 
 @task(
     name="Plan new experiment",
@@ -247,21 +267,20 @@ def AnalyseImage(analyserClient: AnalyserClient, imagePath, experimentPlanPath, 
 )
 def PlanExperiment(plannerClient: PlannerClient, previousAnalysisPath, experimentPlanStoragePath):
     statusLabel.config(text="Updating binary search range")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     plannerClient.BinarySearchController.UpdateSearchRange(
         MeasurementPath=previousAnalysisPath)
     statusLabel.config(text="Calucating search space midpoint")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     plannerClient.BinarySearchController.CalculateMidPoint()
     statusLabel.config(text="Creating experiment plan")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     plannerClient.ExperimentPlanProvider.CreateExperimentPlan(
         PreviousMeasurementItemPath=previousAnalysisPath)
     statusLabel.config(text="Storing experiment plan")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     plannerClient.ExperimentPlanProvider.StoreExperimentPlan(
         ItemPath=experimentPlanStoragePath)
-
 
 @task(
     name="Initialize experiment plan",
@@ -272,17 +291,16 @@ def InitializeExperimentPlan(plannerClient: PlannerClient, experimentPlanStorage
     plannerClient.BinarySearchController.InitializeExperimentParameters(
         High=float(highVar.get()), Low=float(lowVar.get()), Target=targetVar.get())
     statusLabel.config(text="Calucating search space midpoint")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     plannerClient.BinarySearchController.CalculateMidPoint()
     statusLabel.config(text="Initializing experiment plan")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     plannerClient.ExperimentPlanProvider.SubmitExperimentDesignPlan(
         Target=targetVar.get(), Tolerance=TOLERANCE)
     statusLabel.config(text="Storing experiment plan")
-    time.sleep(WAIT_TIME)
+    time.sleep(float(simulationSpeedVar.get()))
     plannerClient.ExperimentPlanProvider.StoreExperimentPlan(
         ItemPath=experimentPlanStoragePath)
-
 
 @task(
     name="Prepare drop",
@@ -291,8 +309,7 @@ def InitializeExperimentPlan(plannerClient: PlannerClient, experimentPlanStorage
 )
 def PrepareDrop():
     statusLabel.config(text="Preparing pendant drop")
-    time.sleep(WAIT_TIME)
-
+    time.sleep(float(simulationSpeedVar.get()))
 
 if __name__ == "__main__":
     window()
