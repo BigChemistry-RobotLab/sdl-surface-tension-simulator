@@ -29,6 +29,10 @@ To get started with this project first this project must be cloned.
 
 `git clone https://git.fhict.nl/coe-htsm/dsl-surface-tension-simulator.git`
 
+CD into the directory
+
+`CD dsl-surface-tension-simulator`
+
 Install the requirements.
 
 `pip install -r requirements.txt`
