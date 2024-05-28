@@ -18,7 +18,7 @@ The development of the demonstrator is done with the help of the SiLA standard f
 ## Technologies Used
 This project utilizes the following packages, among others:
 - [SiLA 2 python implementation](https://sila2.gitlab.io/sila_python/) to create the microservces 
-- [Prefect workflow orchestration package](https://pypi.org/project/prefect/) to visualize the workflow.
+- [Prefect workflow orchestration](https://pypi.org/project/prefect/) to visualize the workflow.
 - [opencv-python](https://pypi.org/project/opencv-python/) To generate and analyse the pendant drop images.
 
 ## Screenshots
@@ -37,6 +37,12 @@ Start the orchestrator which contains the interface.
 
 `python orchestrator.py`
 
+Start the Prefect server (Optional)
+
+`prefect server start`
+
+This server is hosted at [127.0.0.1:4200](127.0.0.1:4200)
+
 ## Architecture
 
 ### High Level Architecture
@@ -48,3 +54,10 @@ The architecture for this demonstrator is defined in a high-level architecture u
 The microservice architecture implements the components described in the high-level architecture and uses the patterns described in the [INTERSECT Microservice Architecture](https://doi.org/10.2172/2333815). The orchestrator can be compared to the controller in the design pattern document. It controls other services, but it does not retrieve any data from the services
 
 ![Microservice architecture](./examples/microservice_architecture.PNG)
+
+## Room for Improvement
+
+## Acknowledgements
+* Thanks to the team from RadBoud University for providing their use case and the great feedback and help.
+
+ 
