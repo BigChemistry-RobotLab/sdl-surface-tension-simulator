@@ -14,7 +14,7 @@ This project showcases a high-level architecture for a self-driving laboratory u
 
 ## General Information
 The goal of this project is to determine how well the INTERSECT Open Architecture aligns with the goals of the RobotLab project. The INTERSECT open architecture describes an open federated architecture networked system of SDLs and instruments that work together to conduct and analyse experiments autonomously. The assessment is conducted by applying the architecture to one of RobotLab's experimental use cases. The interfacial surface tension use case from Radboud University was selected for its clarity and advanced development stage.
-The development of the demonstrator is done with the help of the SiLA standard for laboratory automation. It provides interoperability and flexibility for the integration of laboratory instruments and software services based on standardised communication protocols and data specifications. For the implementation of these microservices certain snippits are borrowed from the team at RadBoud in order to increase the realism of the simulation.
+The development of the demonstrator is done with the help of the SiLA standard for laboratory automation. It provides interoperability and flexibility for the integration of laboratory instruments and software services based on standardised communication protocols and data specifications. For the implementation of these microservices certain snippits are borrowed from the team at Radboud in order to increase the realism of the simulation.
 
 ## Technologies Used
 This project utilizes the following packages, among others:
@@ -57,13 +57,13 @@ The architecture for this demonstrator is defined in a high-level architecture u
 ![high level architecture](./examples/high_level_architecture.PNG)
 
 ### Microservice Architecture
-The microservice architecture implements the components described in the high-level architecture and uses the patterns described in the [INTERSECT Microservice Architecture](https://doi.org/10.2172/2333815). The orchestrator can be compared to the controller in the design pattern document. It controls other services, but it does not retrieve any data from the services
+The microservice architecture implements the components described in the high-level architecture and uses the patterns described in the [INTERSECT Microservice Architecture](https://doi.org/10.2172/2333815). The orchestrator can be compared to the controller in the high-level architecture. Instead of recieving data from the services, the orchestrator tells these services where to store their data.
 
 ![Microservice architecture](./examples/microservice_architecture.PNG)
 
 ## Room for Improvement
 
 ## Acknowledgements
-* Thanks to the team from RadBoud University for providing their use case and the great feedback.
+* Thanks to the team from Radboud University for providing their use case and the great feedback.
 
  
