@@ -28,18 +28,30 @@ canvas = FigureCanvasTkAgg(figure=fig, master=frame2)
 statusLabel = Label(master=frame2)
 statusLabel.pack()
 
-targetLabelText = Label(master=frame1, text="target value")
+targetLabelText = Label(master=frame1, text="Target surface tension")
 targetLabelText.pack()
-statusLabel.pack()
 targetVar = IntVar(value=42)
 targetLabel = Entry(master=frame1, textvariable=targetVar)
 targetLabel.pack()
+
+lowLabelText = Label(master=frame1, text="Low (concentration SDS)")
+lowLabelText.pack()
+lowVar = IntVar(value=0)
+lowVar = Entry(master=frame1, textvariable=lowVar)
+lowVar.pack()
+
+highLabelText = Label(master=frame1, text="High (concentration SDS)")
+highLabelText.pack()
+highVar = IntVar(value=20)
+highVar = Entry(master=frame1, textvariable=highVar)
+highVar.pack()
 
 button = Button(master=frame1, text="Run campaign")
 button.pack()
 
 x = []
 y = []
+
 
 def DisplayGraph(dataClient: DataClient, surfaceTensionPath, experimentPlanPath):
     experimentPlanItem = dataClient.DataItemProvider.GetDataItem(
@@ -55,15 +67,18 @@ def DisplayGraph(dataClient: DataClient, surfaceTensionPath, experimentPlanPath)
     plt = fig.add_subplot(111)
     plt.scatter(x, y)
     plt.set_ylim([30, 80])
-    plt.set_xlim([0, 20])
+    plt.set_xlim([float(lowVar.get()), float(highVar.get())])
     plt.axhline(y=surfaceTension, color="r")
-    plt.text(2, surfaceTension, "{:.2f}".format(surfaceTension), fontsize=10, va='center', ha='center', backgroundcolor='w')
+    plt.text(float(lowVar.get()) + 1, surfaceTension, "{:.2f}".format(
+        surfaceTension), fontsize=10, va='center', ha='center', backgroundcolor='w')
     plt.axvline(x=concentrationSDS, color="r")
-    plt.text(concentrationSDS, 32, "{:.3f}".format(concentrationSDS), fontsize=10, va='center', ha='center', backgroundcolor='w')
+    plt.text(concentrationSDS, 33, "{:.2f}".format(
+        concentrationSDS), fontsize=10, va='center', ha='center', backgroundcolor='w')
     plt.set_xlabel("Concentration SDS")
     plt.set_ylabel("Surface tension")
     canvas.draw()
     canvas.get_tk_widget().pack()
+
 
 def DisplayDrop(dataClient: DataClient, imagePath: str):
     imageDataitem = dataClient.DataItemProvider.GetDataItem(ItemPath=imagePath)
@@ -73,6 +88,7 @@ def DisplayDrop(dataClient: DataClient, imagePath: str):
     tk_image = ImageTk.PhotoImage(pil_image)
     dropImageLabel.image = tk_image
     dropImageLabel.configure(image=tk_image)
+
 
 def click():
     del x[:]
@@ -85,11 +101,14 @@ def click():
     update_thread = threading.Thread(target=RunCampaign)
     update_thread.start()
 
+
 button.config(command=click)
+
 
 def window():
     root.mainloop()
 # ------------------------- Orchestrator -------------------------
+
 
 SERVER_ADDRESS = "127.0.0.1"
 
@@ -191,6 +210,7 @@ def RunCampaign():
         statusLabel.config(text="Target interfacial surface tension reached!")
         button.config(state="active")
 
+
 @task(
     name="Capture image",
     description="Generates image from SDS concentration in experiment plan, and stores the image in the data service",
@@ -203,6 +223,7 @@ def CaptureImage(cameraClient: CameraClient, experimentPlanPath, imageStoragePat
     time.sleep(WAIT_TIME)
     statusLabel.config(text="Storing image")
     cameraClient.CameraController.StoreImage(ItemPath=imageStoragePath)
+
 
 @task(
     name="Analyse image",
@@ -218,6 +239,7 @@ def AnalyseImage(analyserClient: AnalyserClient, imagePath, experimentPlanPath, 
     time.sleep(WAIT_TIME)
     analyserClient.PendantDropAnalyserController.StoreAnalysisResulsts(
         ItemPath=analysisStoragePath)
+
 
 @task(
     name="Plan new experiment",
@@ -241,6 +263,7 @@ def PlanExperiment(plannerClient: PlannerClient, previousAnalysisPath, experimen
     plannerClient.ExperimentPlanProvider.StoreExperimentPlan(
         ItemPath=experimentPlanStoragePath)
 
+
 @task(
     name="Initialize experiment plan",
     description="Initializes variables for binary search, calculates midpoint for initial experiment, sbumits initial experiment design plan with variables and stores that experiment plan in the data store.",
@@ -248,7 +271,7 @@ def PlanExperiment(plannerClient: PlannerClient, previousAnalysisPath, experimen
 )
 def InitializeExperimentPlan(plannerClient: PlannerClient, experimentPlanStoragePath):
     plannerClient.BinarySearchController.InitializeExperimentParameters(
-        High=20, Low=0, Target=targetVar.get())
+        High=float(highVar.get()), Low=float(lowVar.get()), Target=targetVar.get())
     statusLabel.config(text="Calucating search space midpoint")
     time.sleep(WAIT_TIME)
     plannerClient.BinarySearchController.CalculateMidPoint()
@@ -261,6 +284,7 @@ def InitializeExperimentPlan(plannerClient: PlannerClient, experimentPlanStorage
     plannerClient.ExperimentPlanProvider.StoreExperimentPlan(
         ItemPath=experimentPlanStoragePath)
 
+
 @task(
     name="Prepare drop",
     description="Prepares drop using the opentron (doenst really have any impact on the flow, but is only for simulation purposes)",
@@ -269,6 +293,7 @@ def InitializeExperimentPlan(plannerClient: PlannerClient, experimentPlanStorage
 def PrepareDrop():
     statusLabel.config(text="Preparing pendant drop")
     time.sleep(WAIT_TIME)
+
 
 if __name__ == "__main__":
     window()
