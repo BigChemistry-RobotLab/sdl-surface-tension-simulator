@@ -74,8 +74,8 @@ def DisplayGraph(dataClient: DataClient, surfaceTensionPath, experimentPlanPath)
     plt.axvline(x=concentrationSDS, color="r")
     plt.text(concentrationSDS, 33, "{:.2f}".format(
         concentrationSDS), fontsize=10, va='center', ha='center', backgroundcolor='w')
-    plt.set_xlabel("Concentration SDS")
-    plt.set_ylabel("Surface tension")
+    plt.set_xlabel("Concentration SDS (mM)")
+    plt.set_ylabel("Surface tension (mN/m)")
     canvas.draw()
     canvas.get_tk_widget().pack()
 
@@ -88,7 +88,6 @@ def DisplayDrop(dataClient: DataClient, imagePath: str):
     tk_image = ImageTk.PhotoImage(pil_image)
     dropImageLabel.image = tk_image
     dropImageLabel.configure(image=tk_image)
-
 
 def click():
     del x[:]
