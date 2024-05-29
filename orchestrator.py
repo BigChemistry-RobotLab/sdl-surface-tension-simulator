@@ -71,7 +71,6 @@ graphFrame.grid(row=1, column=1, sticky="nsew")
 fig = Figure(figsize=(5, 4), dpi=100)
 canvas = FigureCanvasTkAgg(figure=fig, master=graphFrame)
 
-
 x = []
 y = []
 
@@ -86,6 +85,7 @@ def DisplayGraph(dataClient: DataClient, surfaceTensionPath, experimentPlanPath)
         ItemPath=surfaceTensionPath)
     surfaceTension = float(surfaceTensionItem.DataItemContent.decode('utf-8'))
     y.append(surfaceTension)
+    canvas.figure.clear()
     plt = fig.add_subplot(111)
     plt.scatter(x, y)
     plt.set_ylim([30, 80])
