@@ -1,6 +1,8 @@
 # Self-driving laboratory simulator for the interfacial surface tension use-case
 
-This project showcases a high-level architecture for a self-driving laboratory using the [INTERSECT Open Architecture](https://doi.org/10.1007/978-3-031-23606-8_11) and [SiLA 2](https://sila-standard.com/) laboratory automation standard. The demonstrator is designed to determine the optimal concentration of sodium dodecyl sulfate (SDS) in water to achieve a target interfacial surface tension. 
+![experiment_flow](examples/Experiment_flow.drawio.png)
+
+This project showcases a high-level architecture for a self-driving laboratory using the [INTERSECT Open Architecture](https://doi.org/10.1007/978-3-031-23606-8_11) and [SiLA 2](https://sila-standard.com/) laboratory automation standard. The demonstrator is designed to determine the optimal concentration of sodium dodecyl sulfate (SDS) in water to achieve a target interfacial surface tension using the [pendant drop tensiometry method](https://doi.org/10.1016/j.jcis.2015.05.012).
 
 ## Table of Contents
 * [General Info](#general-information)
