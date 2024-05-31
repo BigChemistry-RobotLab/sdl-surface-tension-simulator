@@ -21,9 +21,11 @@ if TYPE_CHECKING:
 IMAGE_HEIGHT = 800
 IMAGE_WIDTH = 800
 
+
 class CameraControllerImpl(CameraControllerBase):
     def __init__(self, parent_server: Server) -> None:
-        self.dataService = DataClient(address="127.0.0.1",  port=50052, insecure=True)
+        self.dataService = DataClient(
+            address="127.0.0.1",  port=50052, insecure=True)
         super().__init__(parent_server=parent_server)
 
     def _SurfaceTensionFromSDS(self, concentrationSDS):
@@ -33,29 +35,39 @@ class CameraControllerImpl(CameraControllerBase):
             return -0.2893 * concentrationSDS + 39.898
 
     def _ScalingFactorFromSurfaceTension(self, surfaceTension):
-        return -0.00000212063315209107*surfaceTension**3 + 0.0004471918*surfaceTension**2 - 0.0333664627*surfaceTension + 1.8791299508
+        return -0.00000196954736535236*surfaceTension**3 + 0.00041936139516833600*surfaceTension**2 - 0.031770838139162*surfaceTension + 1.85536782687809
 
     def _GenerateImage(self, scalingFactor):
-        scaler = 1.4
-        pipette = cv.imread(os.path.abspath("CameraAdaptor/CameraAdaptor/feature_implementations/pipette.jpg"))
-        pipette = cv.resize(pipette, (math.floor(pipette.shape[1]*scaler), math.floor(pipette.shape[0]*scaler)), cv.INTER_LINEAR)
-        drop = cv.imread(os.path.abspath("CameraAdaptor/CameraAdaptor/feature_implementations/drop.jpg"))
-        drop = cv.resize(drop, (math.floor(drop.shape[1]*scaler), math.floor(drop.shape[0]*scaler)), cv.INTER_LINEAR)
+        initial_scaler = 1.4
+        pipette = cv.imread(os.path.abspath(
+            "CameraAdaptor/CameraAdaptor/feature_implementations/pipette.jpg"))
+        pipette = cv.resize(pipette, (math.floor(
+            pipette.shape[1]*initial_scaler), math.floor(pipette.shape[0]*initial_scaler)), cv.INTER_LINEAR)
+        drop = cv.imread(os.path.abspath(
+            "CameraAdaptor/CameraAdaptor/feature_implementations/drop.jpg"))
+        drop = cv.resize(drop, (math.floor(
+            drop.shape[1]*initial_scaler), math.floor(drop.shape[0]*initial_scaler)), cv.INTER_LINEAR)
 
-        background = np.full((IMAGE_HEIGHT, IMAGE_WIDTH, 3), 255, dtype = np.uint8) 
+        background = np.full(
+            (IMAGE_HEIGHT, IMAGE_WIDTH, 3), 255, dtype=np.uint8)
 
         pipette_y_offset = 0
-        pipette_x_offset = math.floor((IMAGE_WIDTH / 2) - (pipette.shape[1] / 2))
+        pipette_x_offset = math.floor(
+            (IMAGE_WIDTH / 2) - (pipette.shape[1] / 2))
         drop_y_offset = pipette.shape[0]
-        drop_x_offset = math.floor((IMAGE_WIDTH / 2) - (drop.shape[1] / 2)) + 13
+        drop_x_offset = math.floor(
+            (IMAGE_WIDTH / 2) - (drop.shape[1] / 2)) + 13
 
-        background[pipette_y_offset:pipette_y_offset + pipette.shape[0], pipette_x_offset:pipette_x_offset + pipette.shape[1]] = pipette
-        
+        background[pipette_y_offset:pipette_y_offset + pipette.shape[0],
+                   pipette_x_offset:pipette_x_offset + pipette.shape[1]] = pipette
+
         new_height = math.floor(drop.shape[0] * scalingFactor)
-        resized_drop = cv.resize(drop, (drop.shape[1], new_height), cv.INTER_LINEAR)
-        background[drop_y_offset:drop_y_offset + new_height, drop_x_offset:drop_x_offset + drop.shape[1]] = resized_drop
+        resized_drop = cv.resize(
+            drop, (drop.shape[1], new_height), cv.INTER_LINEAR)
+        background[drop_y_offset:drop_y_offset + new_height,
+                   drop_x_offset:drop_x_offset + drop.shape[1]] = resized_drop
         return background
-    
+
     def _add_random_noise(self, image, intensity=30):
         noisy_image = image.copy()
         noise = np.random.randint(-intensity, intensity + 1, noisy_image.shape)
@@ -63,12 +75,16 @@ class CameraControllerImpl(CameraControllerBase):
         return noisy_image
 
     def CaptureImage(self, ExperimentPlanPath: str, *, metadata: MetadataDict) -> CaptureImage_Responses:
-        experimentPlanItem = self.dataService.DataItemProvider.GetDataItem(ItemPath=ExperimentPlanPath)
-        experimentPlan = json.loads(experimentPlanItem.DataItemContent.decode('utf-8'))
+        experimentPlanItem = self.dataService.DataItemProvider.GetDataItem(
+            ItemPath=ExperimentPlanPath)
+        experimentPlan = json.loads(
+            experimentPlanItem.DataItemContent.decode('utf-8'))
         concentrationSDS = experimentPlan["concentrationSDS"]["concentration"]
 
-        surfaceTension = self._SurfaceTensionFromSDS(concentrationSDS=concentrationSDS)
-        scalingFactor = self._ScalingFactorFromSurfaceTension(surfaceTension=surfaceTension)
+        surfaceTension = self._SurfaceTensionFromSDS(
+            concentrationSDS=concentrationSDS)
+        scalingFactor = self._ScalingFactorFromSurfaceTension(
+            surfaceTension=surfaceTension)
 
         scalingFactor += random.uniform(-0.002, 0.002)
         dropImage = self._GenerateImage(scalingFactor=scalingFactor)
