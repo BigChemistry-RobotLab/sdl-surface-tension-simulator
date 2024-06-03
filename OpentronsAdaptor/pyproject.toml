@@ -1,0 +1,21 @@
+[project]
+name = "OpentronsOT2Adaptor"
+version = "0.0.0"
+requires-python = ">=3.8"
+dependencies = [
+    "sila2",
+    "typer",
+]
+
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["OpentronsOT2Adaptor*"]
+
+[tool.setuptools.package-data]
+"OpentronsOT2Adaptor.generated" = [
+    "*/*.sila.xml",
+    "*/*.proto",
+]

@@ -3,6 +3,7 @@ from DataService.DataService import Server as DataService, Client as DataClient
 from PlannerService.PlannerService import Server as PlannerService, Client as PlannerClient
 from CameraAdaptor.CameraAdaptor import Server as CameraAdaptor, Client as CameraClient
 from AnalyserService.AnalyserService import Server as AnalyserService, Client as AnalyserClient
+from OpentronsAdaptor.OpentronsOT2Adaptor import Server as OpentronsAdaptor, Client as OpentronsClient
 import time
 import json
 import numpy as np
@@ -143,6 +144,9 @@ CAMERA_ADAPTOR_PORT = 50055
 ANALYSER_SERVICE_NAME = "AnalyserService"
 ANALYSER_SERVICE_PORT = 50053
 
+OPENTRONS_ADAPTOR_NAME = "OpentronsAdaptor"
+OPENTRONS_ADAPTOR_PORT = 50056
+
 WAIT_TIME = 0.5
 TOLERANCE = 0.25
 
@@ -177,6 +181,13 @@ def RunCampaign():
             address=SERVER_ADDRESS, port=ANALYSER_SERVICE_PORT)
         analyserClient = AnalyserClient(
             address=SERVER_ADDRESS,  port=ANALYSER_SERVICE_PORT, insecure=True)
+        
+        opentronsAdaptor = OpentronsAdaptor(name=OPENTRONS_ADAPTOR_NAME)
+        opentronsAdaptor.start_insecure(
+            address=SERVER_ADDRESS, port=OPENTRONS_ADAPTOR_PORT)
+        opentronsClient = OpentronsClient(
+            address=SERVER_ADDRESS,  port=OPENTRONS_ADAPTOR_PORT, insecure=True)
+        
         experimentIndex = 0
         collectionName = f"collection_{experimentIndex}"
 
@@ -190,7 +201,7 @@ def RunCampaign():
 
         InitializeExperimentPlan(plannerClient=plannerClient,
                                  experimentPlanStoragePath=f"namespace/{collectionName}/experiment_plan")
-        PrepareDrop()
+        PrepareDrop(opentronsClient=opentronsClient, experimentPlanStoragePath=f"namespace/{collectionName}/experiment_plan")
         CaptureImage(cameraClient=cameraClient, experimentPlanPath=f"namespace/{collectionName}/experiment_plan",
                      imageStoragePath=f"namespace/{collectionName}/image")
         DisplayDrop(dataClient=dataClient,
@@ -213,7 +224,7 @@ def RunCampaign():
             if experimentPlan["stop"] == True:
                 break
             else:
-                PrepareDrop()
+                PrepareDrop(opentronsClient=opentronsClient, experimentPlanStoragePath=f"namespace/{collectionName}/experiment_plan")
                 CaptureImage(cameraClient=cameraClient, experimentPlanPath=f"namespace/{collectionName}/experiment_plan",
                              imageStoragePath=f"namespace/{collectionName}/image")
                 DisplayDrop(dataClient=dataClient,
@@ -307,9 +318,10 @@ def InitializeExperimentPlan(plannerClient: PlannerClient, experimentPlanStorage
     description="Prepares drop using the opentron (doenst really have any impact on the flow, but is only for simulation purposes)",
     tags=["Act"]
 )
-def PrepareDrop():
+def PrepareDrop(opentronsClient: OpentronsClient, experimentPlanStoragePath):
     statusLabel.config(text="Preparing pendant drop")
     time.sleep(float(simulationSpeedVar.get()))
+    opentronsClient.OpentronsOT2Controller.PrepareDrop(ExperimentPlanPath=experimentPlanStoragePath)
 
 if __name__ == "__main__":
     window()

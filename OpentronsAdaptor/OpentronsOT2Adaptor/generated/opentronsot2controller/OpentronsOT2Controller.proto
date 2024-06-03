@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "SiLAFramework.proto";
+
+package sila2.org.silastandard.examples.opentronsot2controller.v1;
+
+/* Mock controller for the Opentrons OT-2 autonomous pipetting robot. */
+service OpentronsOT2Controller {
+  /* Mock prepare pendant drop with concentration SDS retrieved from experiment plan. */
+  rpc PrepareDrop (sila2.org.silastandard.examples.opentronsot2controller.v1.PrepareDrop_Parameters) returns (sila2.org.silastandard.examples.opentronsot2controller.v1.PrepareDrop_Responses) {}
+}
+
+/* Parameters for PrepareDrop */
+message PrepareDrop_Parameters {
+  sila2.org.silastandard.String ExperimentPlanPath = 1;  /* Storage location of the experiment plan in the form of a file path. */
+}
+
+/* Responses of PrepareDrop */
+message PrepareDrop_Responses {
+}
