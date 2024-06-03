@@ -1,0 +1,19 @@
+<Feature xmlns="http://www.sila-standard.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Category="examples" FeatureVersion="1.0" MaturityLevel="Verified" Originator="org.silastandard" SiLA2Version="1.0" xsi:schemaLocation="http://www.sila-standard.org https://gitlab.com/SiLA2/sila_base/raw/master/schema/FeatureDefinition.xsd">
+  <Identifier>OpentronsOT2Controller</Identifier>
+  <DisplayName>Opentrons OT-2 controller</DisplayName>
+  <Description>Mock controller for the Opentrons OT-2 autonomous pipetting robot.</Description>
+  <Command>
+    <Identifier>PrepareDrop</Identifier>
+    <DisplayName>Prepare drop</DisplayName>
+    <Description>Mock prepare pendant drop with concentration SDS retrieved from experiment plan.</Description>
+    <Observable>No</Observable>
+    <Parameter>
+      <Identifier>ExperimentPlanPath</Identifier>
+      <DisplayName>Experiment plan path</DisplayName>
+      <Description>Storage location of the experiment plan in the form of a file path.</Description>
+      <DataType>
+        <Basic>String</Basic>
+      </DataType>
+    </Parameter>
+  </Command>
+</Feature>
