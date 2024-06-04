@@ -1,6 +1,5 @@
 pytest:
   image: python:3.10.0
   script:
-    - apt-get update -q -y
     - pip install -r requirements.txt
     - pytest AnalysisService/tests/
