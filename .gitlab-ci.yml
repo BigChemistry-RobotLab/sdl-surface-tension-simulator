@@ -1,5 +1,5 @@
 pytest:
   image: python:3.10.0
   script:
-    - pip install -r requirements.txt
+    - python -m pip install -r requirements.txt
     - pytest AnalysisService/tests/
