@@ -3,6 +3,6 @@ image: python:3.10.0
 before_script:
   - python --version ; pip --version 
 
-test:
+requirements:
   script:
-    - python --version
+    - pip install -r requirements.txt
