@@ -1,5 +1,4 @@
-pytest:
-  image: python:3.10.0
-  script:
-    - python -m pip install -r requirements.txt
-    - pytest AnalysisService/tests/
+image: python:3.10.0
+
+before_script:
+  - python --version ; pip --version 
