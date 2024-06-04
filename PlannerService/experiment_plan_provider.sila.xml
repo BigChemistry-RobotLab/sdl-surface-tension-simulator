@@ -7,7 +7,7 @@
   <Identifier>ExperimentPlanProvider</Identifier>
   <DisplayName>Experiment Plan Provider</DisplayName>
   <Description>
-    TODO (stores plan with target and checks if goal is reached)
+    Stores initial experiment plan and creates experiment plans based on results of the previous experiments.
   </Description>
 
   <Command>

@@ -16,7 +16,6 @@ class Server(SilaServer):
         name: Optional[str] = None,
         description: Optional[str] = None,
     ):
-        # TODO: fill in your server information
         if name is None:
             name = "OpentronsAdaptor"
         if description is None:
