@@ -2,3 +2,7 @@ image: python:3.10.0
 
 before_script:
   - python --version ; pip --version 
+
+test:
+  script:
+    - python --version
