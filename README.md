@@ -66,6 +66,7 @@ The microservice architecture implements the components described in the high-le
 ## Room for Improvement
 
 ## Acknowledgements
-* Thanks to the team from Radboud University for providing their use case and the great feedback.
-
- 
+* Thanks to the Robotlab team from Radboud University for providing their use case and the great feedback.
+* Thanks to the Robotlab team from Fontys for thier great assistance.
+* Thanks to Peter Lambooij for his technical, chemical and mathmatical expertise and guidance. 
+* Thanks to Lars van den Brandt for this for his enthusiastic engagement, assistance, and collaboration.  
