@@ -11,6 +11,5 @@ stages:
 testAnalyserService:
   stage: testAnalyser
   script:
-    - pip install pytest
-    - pytest AnalyserService/tests/
+    - python -m unittest discover -p "*_test.py"
 

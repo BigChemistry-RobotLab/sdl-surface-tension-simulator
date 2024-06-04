@@ -1,6 +1,6 @@
-# Fix backwards reference problem by appending the root project folder to the imports
 import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+# when running this test in the cmd add the line below to fix backwards reference problem by appending the root project folder to the imports
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))) 
 
 import cv2 as cv
 from DataService.DataService import Server as DataService, Client as DataClient
@@ -56,7 +56,8 @@ class TestPendantDropAnalyser(unittest.TestCase):
         )
 
         # Read test image and store it in data service
-        image = cv.imread("pendant_drop.jpg")
+        image = cv.imread(os.path.abspath(
+            "AnalyserService/tests/pendant_drop.jpg"))
         imageBytes = cv.imencode('.jpg', image)[1].tobytes()
         self.dataClient.DataItemProvider.CreateDataItem(
             ItemPath="namespace/collection/test_image",
