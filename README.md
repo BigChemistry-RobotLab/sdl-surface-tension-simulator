@@ -16,11 +16,11 @@ This project showcases a high-level architecture for a self-driving laboratory u
 
 ## General Information
 The goal of this project is to determine how well the INTERSECT Open Architecture aligns with the goals of the RobotLab project. The INTERSECT open architecture describes an open federated architecture networked system of SDLs and instruments that work together to conduct and analyse experiments autonomously. The assessment is conducted by applying the architecture to one of RobotLab's experimental use cases. The interfacial surface tension use case from Radboud University was selected for its clarity and advanced development stage.
-The development of the demonstrator is done with the help of the SiLA standard for laboratory automation. It provides interoperability and flexibility for the integration of laboratory instruments and software services based on standardised communication protocols and data specifications. For the implementation of these microservices certain snippits are borrowed from the team at Radboud in order to increase the realism of the simulation.
+The development of the demonstrator is done with the help of the SiLA standard for laboratory automation. It provides interoperability and flexibility for the integration of laboratory instruments and software services based on standardised communication protocols and data specifications. For the implementation of these microservices certain snippets are borrowed from the team at Radboud to increase the realism of the simulation.
 
 ## Technologies Used
 This project utilizes the following packages, among others:
-- [SiLA 2 python implementation](https://sila2.gitlab.io/sila_python/) to create the microservces 
+- [SiLA 2 python implementation](https://sila2.gitlab.io/sila_python/) to create the microservices 
 - [Prefect workflow orchestration](https://pypi.org/project/prefect/) to visualize the workflow.
 - [opencv-python](https://pypi.org/project/opencv-python/) To generate and analyse the pendant drop images.
 
@@ -59,7 +59,7 @@ The architecture for this demonstrator is defined in a high-level architecture u
 ![high level architecture](./examples/high_level_architecture.PNG)
 
 ### Microservice Architecture
-The microservice architecture implements the components described in the high-level architecture and uses the patterns described in the [INTERSECT Microservice Architecture](https://doi.org/10.2172/2333815). The orchestrator can be compared to the controller in the high-level architecture. Instead of recieving data from the services, the orchestrator tells these services where to store their data.
+The microservice architecture implements the components described in the high-level architecture and uses the patterns described in the [INTERSECT Microservice Architecture](https://doi.org/10.2172/2333815). The orchestrator can be compared to the controller in the high-level architecture. Instead of receiving data from the services, the orchestrator tells these services where to store their data.
 
 ![Microservice architecture](./examples/microservice_architecture.PNG)
 
@@ -69,6 +69,6 @@ The microservice architecture implements the components described in the high-le
 ## Acknowledgements
 Thanks to:
 * The Robotlab team from Radboud University for providing their use case and the great feedback.
-* The Robotlab team from Fontys for thier great assistance.
-* Peter Lambooij for his technical, chemical and mathmatical expertise and guidance. 
+* The Robotlab team from Fontys for their great assistance.
+* Peter Lambooij for his technical, chemical, and mathematical expertise and guidance. 
 * Lars van den Brandt for this for his enthusiastic engagement, assistance, and collaboration.  
