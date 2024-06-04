@@ -1,16 +1,12 @@
 image: python:3.10.0
 
 before_script:
+  - ls
+  - pip install -r requirements.txt
   - python --version ; pip --version # debugging
 
 stages:
-  - requirements
   - testAnalyser
-
-installRequirements:
-  stage: requirements
-  script:
-    - pip install -r requirements.txt
 
 testAnalyserService:
   stage: testAnalyser
