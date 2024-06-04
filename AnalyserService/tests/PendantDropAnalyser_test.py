@@ -1,6 +1,6 @@
 import sys, os
 # when running this test in the cmd add the line below to fix backwards reference problem by appending the root project folder to the imports
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))) 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))) 
 
 import cv2 as cv
 from DataService.DataService import Server as DataService, Client as DataClient
