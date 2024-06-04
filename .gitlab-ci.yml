@@ -15,5 +15,6 @@ installRequirements:
 testAnalyserService:
   stage: testAnalyser
   script:
+    - pip install pytest
     - pytest AnalyserService/tests/
 
